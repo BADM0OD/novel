@@ -229,6 +229,67 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
         
+        .chapter-nav {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+        }
+        
+        .chapter-nav .nav-btn {
+            display: inline-block;
+            padding: 12px 22px;
+            background: rgba(40, 60, 120, 0.45);
+            color: #c0d0ff;
+            text-decoration: none;
+            border-radius: 8px;
+            border: 1px solid rgba(100, 140, 255, 0.25);
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            white-space: nowrap;
+        }
+        
+        .chapter-nav .nav-btn:hover {
+            background: rgba(60, 80, 140, 0.9);
+            color: #ffffff;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .chapter-nav .nav-prev {
+            justify-self: start;
+        }
+        
+        .chapter-nav .nav-next {
+            justify-self: end;
+        }
+        
+        .chapter-nav .nav-btn.disabled {
+            opacity: 0.3;
+            pointer-events: none;
+            cursor: default;
+        }
+        
+        .chapter-nav .back-to-toc {
+            justify-self: center;
+        }
+        
+        @media (max-width: 768px) {
+            .chapter-nav {
+                gap: 8px;
+            }
+            
+            .chapter-nav .nav-btn {
+                padding: 10px 12px;
+                font-size: 0.9rem;
+            }
+            
+            .chapter-nav .back-to-toc {
+                padding: 10px 14px;
+                font-size: 0.9rem;
+            }
+        }
+        
         @media (max-width: 768px) {
             h1 {
                 font-size: 2.5rem;
@@ -341,7 +402,7 @@
 黑暗的触手向他蔓延过来，缠住他，拥抱住他，他闭上眼，感受到没感受过的温暖。终点一点点地靠近，一切都像是一场很长的梦。 
         </div>
         
-        <a href="#index-page" class="back-to-toc">返回目录</a>
+        <nav class="chapter-nav">             <span class="nav-btn nav-prev disabled">← 上一章</span>             <a href="#index-page" class="back-to-toc">返回目录</a>             <a href="#chapter1-page" class="nav-btn nav-next">下一章 →</a>         </nav>
     </div>
     
     <!-- 第一章页面 -->
@@ -387,7 +448,7 @@
 天色近暮，人们三五成群，悉悉索索地散开，回到了村子里，一切如常。
         </div>
         
-        <a href="#index-page" class="back-to-toc">返回目录</a>
+        <nav class="chapter-nav">             <a href="#prologue-page" class="nav-btn nav-prev">← 上一章</a>             <a href="#index-page" class="back-to-toc">返回目录</a>             <a href="#chapter2-page" class="nav-btn nav-next">下一章 →</a>         </nav>
     </div>
     
     <!-- 第二章页面 -->
@@ -459,7 +520,7 @@
 
         </div>
         
-        <a href="#index-page" class="back-to-toc">返回目录</a>
+        <nav class="chapter-nav">             <a href="#chapter1-page" class="nav-btn nav-prev">← 上一章</a>             <a href="#index-page" class="back-to-toc">返回目录</a>             <a href="#chapter3-page" class="nav-btn nav-next">下一章 →</a>         </nav>
     </div>
 <!-- 第三章页面 -->
 <div id="chapter3-page" class="chapter-container" style="display: none;">
@@ -536,7 +597,7 @@
 
     </div>
     
-    <a href="#index-page" class="back-to-toc">返回目录</a>
+    <nav class="chapter-nav">         <a href="#chapter2-page" class="nav-btn nav-prev">← 上一章</a>         <a href="#index-page" class="back-to-toc">返回目录</a>         <a href="#chapter4-page" class="nav-btn nav-next">下一章 →</a>     </nav>
 </div>
 <!-- 第四章页面 -->
 <div id="chapter4-page" class="chapter-container" style="display: none;">
@@ -648,7 +709,7 @@
 
     </div>
     
-    <a href="#index-page" class="back-to-toc">返回目录</a>
+    <nav class="chapter-nav">         <a href="#chapter3-page" class="nav-btn nav-prev">← 上一章</a>         <a href="#index-page" class="back-to-toc">返回目录</a>         <a href="#chapter5-page" class="nav-btn nav-next">下一章 →</a>     </nav>
 </div>
 <div id="chapter5-page" class="chapter-container" style="display: none;">
     <div class="chapter-header">
@@ -750,7 +811,7 @@
 
     </div>
     
-    <a href="#index-page" class="back-to-toc">返回目录</a>
+    <nav class="chapter-nav">         <a href="#chapter4-page" class="nav-btn nav-prev">← 上一章</a>         <a href="#index-page" class="back-to-toc">返回目录</a>         <span class="nav-btn nav-next disabled">下一章 →</span>     </nav>
 </div>
     
     <script>
@@ -811,6 +872,23 @@
                     document.getElementById('index-page').style.display = 'flex';
                     
                     // 滚动到顶部
+                    window.scrollTo(0, 0);
+                });
+            });
+            
+            // 为上一章/下一章按钮添加点击事件
+            document.querySelectorAll('.chapter-nav a.nav-btn').forEach(function (link) {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+
+                    var targetPageId = this.getAttribute('href').substring(1);
+
+                    pages.forEach(function (page) {
+                        page.style.display = 'none';
+                    });
+
+                    document.getElementById(targetPageId).style.display = 'flex';
+
                     window.scrollTo(0, 0);
                 });
             });
