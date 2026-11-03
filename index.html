@@ -9,65 +9,119 @@
 
     body {
         min-height: 100vh;
-        background: linear-gradient(180deg, #eef7ff 0%, #d6ebff 100%);
+        background: linear-gradient(180deg, #f8fcff 0%, #e7f2fc 55%, #dcebf9 100%);
         font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
-        color: #1e4a6b;
+        color: #1f3a4d;
         display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 60px 20px;
+        justify-content: center;
+        padding: 96px 24px 70px;
     }
 
-    h1 {
+    .wrap { width: 100%; max-width: 620px; }
+
+    .head {
+        padding-bottom: 24px;
+        margin-bottom: 30px;
+        border-bottom: 1px solid rgba(70, 130, 180, 0.16);
+    }
+
+    .head h1 {
+        font-family: "Songti SC", "Noto Serif SC", "SimSun", serif;
         font-size: 2rem;
         font-weight: 600;
-        letter-spacing: 2px;
-        margin-bottom: 8px;
-        color: #17405f;
+        letter-spacing: 0.26em;
+        text-indent: 0.26em;
+        color: #17364a;
     }
 
-    .sub {
+    .head .meta {
+        margin-top: 10px;
+        font-size: 0.8rem;
+        letter-spacing: 0.18em;
         color: #7fa3bd;
-        font-size: 0.9rem;
-        margin-bottom: 44px;
     }
 
-    .shelf {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 20px;
-        justify-content: center;
-        max-width: 720px;
-    }
+    .list { display: flex; flex-direction: column; gap: 14px; }
 
     .book {
-        min-width: 160px;
-        padding: 26px 20px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        padding: 24px 24px 24px 28px;
         background: #ffffff;
         border-radius: 10px;
-        border-left: 5px solid #4da3e6;
-        box-shadow: 0 4px 14px rgba(90, 150, 210, 0.14);
-        text-align: center;
+        box-shadow: 0 6px 18px rgba(70, 130, 180, 0.10);
         text-decoration: none;
-        color: #1e4a6b;
-        font-size: 1.1rem;
-        font-weight: 600;
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
+        color: inherit;
+        overflow: hidden;
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .book::before {
+        content: "";
+        position: absolute;
+        left: 0; top: 0; bottom: 0;
+        width: 5px;
+        background: var(--spine, #4da3e6);
     }
 
     .book:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 22px rgba(90, 150, 210, 0.26);
-        color: #0f6db3;
+        transform: translateY(-2px);
+        box-shadow: 0 14px 28px rgba(70, 130, 180, 0.20);
+    }
+
+    .book .title {
+        font-family: "Songti SC", "Noto Serif SC", "SimSun", serif;
+        font-size: 1.18rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+    }
+
+    .book .arrow {
+        margin-left: auto;
+        color: #9dbfd8;
+        font-size: 1.05rem;
+        transition: transform 0.18s ease, color 0.18s ease;
+    }
+
+    .book:hover .arrow { transform: translateX(4px); color: #4da3e6; }
+
+    footer {
+        margin-top: 44px;
+        text-align: center;
+        font-size: 0.76rem;
+        letter-spacing: 0.2em;
+        color: #a9c2d4;
+    }
+
+    @media (max-width: 560px) {
+        body { padding: 64px 18px 50px; }
+        .head h1 { font-size: 1.6rem; }
     }
 </style>
 </head>
 <body>
-    <h1>书库</h1>
-    <div class="sub">点击书名开始阅读</div>
-    <div class="shelf">
-        <a class="book" href="./sydns.html">深渊的凝视</a>
-        <a class="book" href="./lihua.html">九洲：梨花微雨</a>
+<div class="wrap">
+
+    <div class="head">
+        <h1>书库</h1>
+        <div class="meta">共 2 本</div>
     </div>
+
+    <div class="list">
+        <a class="book" href="./sydns.html" style="--spine:#2f5d7c">
+            <span class="title">深渊的凝视</span>
+            <span class="arrow">→</span>
+        </a>
+        <a class="book" href="./lihua.html" style="--spine:#4f7a6f">
+            <span class="title">九洲：梨花微雨</span>
+            <span class="arrow">→</span>
+        </a>
+    </div>
+
+    <footer>BADMooD</footer>
+
+</div>
 </body>
 </html>
