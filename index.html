@@ -5,99 +5,253 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>书库</title>
 <style>
+    :root {
+        --ink: #1f3a4d;
+        --line: rgba(70, 130, 180, 0.16);
+        --qing: #4f7a6f;
+    }
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
         min-height: 100vh;
-        background: linear-gradient(180deg, #f8fcff 0%, #e7f2fc 55%, #dcebf9 100%);
+        background:
+            radial-gradient(900px 520px at 18% -10%, #ffffff 0%, rgba(255,255,255,0) 62%),
+            linear-gradient(180deg, #f8fcff 0%, #e7f2fc 52%, #d9e8f7 100%);
+        background-attachment: fixed;
+        color: var(--ink);
         font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
-        color: #1f3a4d;
         display: flex;
         justify-content: center;
-        padding: 96px 24px 70px;
+        padding: 96px 24px 80px;
+        overflow-x: hidden;
     }
 
-    .wrap { width: 100%; max-width: 620px; }
+    body::before {
+        content: "";
+        position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: .5;
+        background-image:
+            repeating-linear-gradient(0deg, rgba(70, 130, 180, .03) 0 1px, transparent 1px 3px);
+    }
+
+    .wrap { position: relative; z-index: 1; width: 100%; max-width: 620px; }
 
     .head {
-        padding-bottom: 24px;
-        margin-bottom: 30px;
-        border-bottom: 1px solid rgba(70, 130, 180, 0.16);
+        padding-bottom: 26px;
+        border-bottom: 1px solid var(--line);
+        text-align: center;
     }
 
     .head h1 {
-        font-family: "Songti SC", "Noto Serif SC", "SimSun", serif;
+        font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
         font-size: 2rem;
         font-weight: 600;
-        letter-spacing: 0.26em;
-        text-indent: 0.26em;
+        letter-spacing: .3em;
+        text-indent: .3em;
         color: #17364a;
     }
 
-    .head .meta {
-        margin-top: 10px;
-        font-size: 0.8rem;
-        letter-spacing: 0.18em;
-        color: #7fa3bd;
+    .meta {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        margin-top: 14px;
+        font-size: .72rem;
+        letter-spacing: .28em;
+        color: #8aa9bf;
     }
+    .meta::before, .meta::after {
+        content: "";
+        width: 46px;
+        height: 1px;
+    }
+    .meta::before { background: linear-gradient(90deg, transparent, rgba(70, 130, 180, .35)); }
+    .meta::after { background: linear-gradient(90deg, rgba(70, 130, 180, .35), transparent); }
 
-    .list { display: flex; flex-direction: column; gap: 14px; }
+    .list {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-top: 34px;
+        padding-bottom: 26px;
+    }
+    /* 一层书架 */
+    .list::after {
+        content: "";
+        position: absolute;
+        left: -8px; right: -8px; bottom: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(70, 120, 160, .30), transparent);
+        box-shadow: 0 12px 20px -14px rgba(40, 90, 130, .55);
+    }
 
     .book {
         position: relative;
         display: flex;
         align-items: center;
         gap: 18px;
-        padding: 24px 24px 24px 28px;
-        background: #ffffff;
+        padding: 26px 24px 26px 38px;
         border-radius: 10px;
-        box-shadow: 0 6px 18px rgba(70, 130, 180, 0.10);
         text-decoration: none;
-        color: inherit;
         overflow: hidden;
-        transition: transform 0.18s ease, box-shadow 0.18s ease;
+        transition: transform .35s cubic-bezier(.22,.61,.36,1),
+                    box-shadow .35s ease, border-color .35s ease;
+    }
+    .book:hover { transform: translate(-6px, -4px); }
+
+    .title {
+        font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+        font-size: 1.22rem;
+        font-weight: 600;
+        letter-spacing: .08em;
     }
 
-    .book::before {
-        content: "";
+    .arrow {
+        margin-left: auto;
+        font-size: 1.05rem;
+        transition: transform .3s ease, color .3s ease;
+    }
+    .book:hover .arrow { transform: translateX(6px); }
+
+    /* 书脊 */
+    .spine {
         position: absolute;
         left: 0; top: 0; bottom: 0;
-        width: 5px;
-        background: var(--spine, #4da3e6);
+        width: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .spine::after {
+        content: "";
+        position: absolute;
+        right: 0; top: 8px; bottom: 8px;
+        width: 1px;
+        background: rgba(255, 255, 255, .18);
+    }
+    .mark { position: relative; display: block; }
+
+    /* 深渊 */
+    .book-dark {
+        background: linear-gradient(160deg, #110e15 0%, #08070b 55%, #0d0a10 100%);
+        border: 1px solid rgba(200, 70, 95, .18);
+        box-shadow: 0 10px 28px rgba(20, 45, 70, .18);
+    }
+    .book-dark .title { color: #eef4f7; text-shadow: 0 0 22px rgba(170, 40, 62, .28); }
+    .book-dark .arrow { color: #a5646f; }
+    .book-dark .spine { background: linear-gradient(180deg, #2f5d7c, #152636); }
+    .book-dark:hover {
+        border-color: rgba(210, 80, 105, .42);
+        box-shadow: 0 18px 42px rgba(10, 25, 40, .30), 0 0 40px rgba(160, 30, 55, .12);
+    }
+    .book-dark:hover .arrow { color: #e08595; }
+
+    .mark-eye {
+        width: 12px; height: 9px;
+        border-radius: 50%;
+        background: radial-gradient(circle at 50% 50%, #04030a 0 30%, #c8324b 37% 50%, #efe5e6 56% 100%);
+        box-shadow: 0 0 10px rgba(200, 60, 85, .75);
     }
 
-    .book:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 14px 28px rgba(70, 130, 180, 0.20);
+    /* 悬停时浮出的小瞳孔 */
+    .gaze {
+        position: absolute;
+        right: 48px; top: 50%;
+        width: 22px; height: 22px;
+        margin-top: -11px;
+        display: flex; align-items: center; justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity .4s ease;
+    }
+    .book-dark:hover .gaze { opacity: 1; }
+    .gaze i {
+        display: block;
+        width: 9px; height: 9px;
+        border-radius: 50%;
+        background: radial-gradient(circle, #000 0 55%, rgba(150, 34, 54, .72) 62%, transparent 74%);
+        box-shadow: 0 0 10px rgba(190, 50, 75, .65);
+        transition: transform .18s ease-out;
     }
 
-    .book .title {
-        font-family: "Songti SC", "Noto Serif SC", "SimSun", serif;
-        font-size: 1.18rem;
-        font-weight: 600;
-        letter-spacing: 0.06em;
+    /* 梨花 */
+    .book-paper {
+        background: linear-gradient(160deg, #fffdf8 0%, #f7f2e6 100%);
+        border: 1px solid rgba(79, 122, 111, .16);
+        box-shadow: 0 10px 26px rgba(80, 100, 80, .10);
+    }
+    .book-paper .title { color: #2b2a26; }
+    .book-paper .arrow { color: #7ea79a; }
+    .book-paper .spine { background: linear-gradient(180deg, #5b8779, #33564c); }
+    .book-paper:hover {
+        border-color: rgba(79, 122, 111, .40);
+        box-shadow: 0 18px 40px rgba(60, 90, 80, .18);
+    }
+    .book-paper:hover .arrow { color: var(--qing); }
+
+    .mark-flower {
+        width: 7px; height: 7px;
+        border-radius: 50%;
+        background: #fffdf8;
+        box-shadow:
+            0 -4px 0 -1px #fffdf8,
+            3.8px -1.2px 0 -1px #fffdf8,
+            -3.8px -1.2px 0 -1px #fffdf8,
+            2.4px 3.2px 0 -1px #fffdf8,
+            -2.4px 3.2px 0 -1px #fffdf8;
     }
 
-    .book .arrow {
-        margin-left: auto;
-        color: #9dbfd8;
-        font-size: 1.05rem;
-        transition: transform 0.18s ease, color 0.18s ease;
+    /* 悬停时飘过的花瓣 */
+    .petals {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+        opacity: 0;
+        transition: opacity .4s ease;
     }
+    .book-paper:hover .petals { opacity: 1; }
+    .petals i {
+        position: absolute;
+        top: -10px;
+        width: 6px; height: 8px;
+        border-radius: 60% 40% 60% 40%;
+        background: rgba(255, 255, 255, .95);
+        box-shadow: 0 0 5px rgba(150, 180, 160, .5);
+        animation: sweep 5s linear infinite;
+        animation-play-state: paused;
+    }
+    .book-paper:hover .petals i { animation-play-state: running; }
+    .petals i:nth-child(1) { left: 74%; }
+    .petals i:nth-child(2) { left: 86%; animation-delay: 1.7s; }
+    .petals i:nth-child(3) { left: 64%; animation-delay: 3.2s; }
 
-    .book:hover .arrow { transform: translateX(4px); color: #4da3e6; }
+    @keyframes sweep {
+        0% { transform: translate(0, -10px) rotate(0deg); opacity: 0; }
+        15% { opacity: .9; }
+        78% { opacity: .9; }
+        100% { transform: translate(-150px, 96px) rotate(260deg); opacity: 0; }
+    }
 
     footer {
-        margin-top: 44px;
+        margin-top: 36px;
         text-align: center;
-        font-size: 0.76rem;
-        letter-spacing: 0.2em;
+        font-size: .72rem;
+        letter-spacing: .24em;
         color: #a9c2d4;
     }
 
     @media (max-width: 560px) {
         body { padding: 64px 18px 50px; }
         .head h1 { font-size: 1.6rem; }
+        .book { padding: 22px 18px 22px 32px; }
+        .title { font-size: 1.1rem; }
+        .gaze { display: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        * { animation: none !important; transition: none !important; }
     }
 </style>
 </head>
@@ -110,12 +264,17 @@
     </div>
 
     <div class="list">
-        <a class="book" href="./sydns.html" style="--spine:#2f5d7c">
+        <a class="book book-dark" href="./sydns.html">
+            <span class="spine"><i class="mark mark-eye"></i></span>
             <span class="title">深渊的凝视</span>
+            <span class="gaze" aria-hidden="true"><i></i></span>
             <span class="arrow">→</span>
         </a>
-        <a class="book" href="./lhwy.html" style="--spine:#4f7a6f">
+
+        <a class="book book-paper" href="./lhwy.html">
+            <span class="spine"><i class="mark mark-flower"></i></span>
             <span class="title">九洲：梨花微雨</span>
+            <span class="petals" aria-hidden="true"><i></i><i></i><i></i></span>
             <span class="arrow">→</span>
         </a>
     </div>
@@ -123,5 +282,27 @@
     <footer>BADMooD</footer>
 
 </div>
+
+<script>
+    (function () {
+        var book = document.querySelector('.book-dark');
+        var gaze = book ? book.querySelector('.gaze i') : null;
+        if (!book || !gaze) return;
+
+        book.addEventListener('mousemove', function (e) {
+            var r = book.getBoundingClientRect();
+            var cx = r.left + r.width - 59;
+            var cy = r.top + r.height / 2;
+            var dx = (e.clientX - cx) / 26;
+            var dy = (e.clientY - cy) / 20;
+            var clamp = function (v) { return Math.max(-4, Math.min(4, v)); };
+            gaze.style.transform = 'translate(' + clamp(dx).toFixed(1) + 'px,' + clamp(dy).toFixed(1) + 'px)';
+        });
+
+        book.addEventListener('mouseleave', function () {
+            gaze.style.transform = 'translate(0, 0)';
+        });
+    })();
+</script>
 </body>
 </html>
