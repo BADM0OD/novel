@@ -116,23 +116,6 @@
     .chapter-nav .next { justify-self: end; }
 
     /* ---------- 小玩意 ---------- */
-    /* 朱红小印 */
-    .seal-row { display: flex; justify-content: flex-end; margin-top: 22px; padding-right: 4px; }
-    .seal {
-        writing-mode: vertical-rl;
-        font-size: .92rem;
-        letter-spacing: .2em;
-        color: rgba(158, 42, 36, .82);
-        border: 2px solid rgba(158, 42, 36, .58);
-        border-radius: 2px;
-        padding: 9px 4px 9px 6px;
-        transform: rotate(-5deg);
-        opacity: .85;
-        pointer-events: none;
-        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .45);
-        text-shadow: 0 0 .3px rgba(168, 52, 44, .5);
-    }
-
     /* 熊掌印 */
     .paw { display: flex; justify-content: flex-end; margin-top: 30px; color: var(--ink); opacity: .11; pointer-events: none; }
     .paw svg { width: 46px; height: 46px; fill: currentColor; transform: rotate(-12deg); }
@@ -176,16 +159,6 @@
             0 0 13px rgba(214, 186, 196, .65);
     }
 
-    /* 远山 */
-    .ridge {
-        color: rgba(79,122,111,.24);
-        margin-top: 30px;
-        opacity: 0; transform: translateY(8px);
-        transition: opacity 1.4s ease, transform 1.4s ease;
-    }
-    .ridge.in { opacity: 1; transform: none; }
-    .ridge svg { display: block; width: 100%; height: 88px; }
-
     @media (max-width: 1024px) {
         .branch { display: none !important; }
     }
@@ -196,7 +169,6 @@
         .paper { padding: 28px 22px; }
         .paper p { font-size: 1rem; line-height: 2.05; }
         .reader-top { font-size: .85rem; }
-        .ridge svg { height: 60px; }
     }
 </style>
 </head>
@@ -213,14 +185,6 @@
         <div class="toc">
             <div class="toc-head"><span>目 录</span><span id="toc-count"></span></div>
             <div id="toc-list"></div>
-            <div class="seal-row"><span class="seal" aria-hidden="true">待续</span></div>
-        </div>
-
-        <div class="ridge" id="ridge" aria-hidden="true">
-            <svg viewBox="0 0 600 90" preserveAspectRatio="none">
-                <path d="M0,80 L44,54 L78,68 L122,40 L160,58 L198,50 L248,74 L292,44 L332,60 L384,36 L422,58 L472,48 L518,70 L562,52 L600,64" fill="none" stroke="currentColor" stroke-width="1.1"/>
-                <path d="M0,88 L66,72 L132,82 L206,64 L282,82 L352,66 L430,84 L512,70 L600,80" fill="none" stroke="currentColor" stroke-width="1" opacity=".5"/>
-            </svg>
         </div>
 
         <div class="shelf-back">
@@ -402,32 +366,6 @@ route();
             p.style.transform = '';
         });
     });
-})();
-
-// 远山：滚到页脚才显影
-(function () {
-    const ridge = document.getElementById('ridge');
-    if (!ridge) return;
-
-    function check() {
-        const r = ridge.getBoundingClientRect();
-        if (r.top < window.innerHeight - 30 && r.bottom > 0) ridge.classList.add('in');
-    }
-
-    window.addEventListener('scroll', check, { passive: true });
-    window.addEventListener('resize', check);
-
-    if ('IntersectionObserver' in window) {
-        new IntersectionObserver(function (entries) {
-            entries.forEach(function (en) {
-                if (en.isIntersecting) ridge.classList.add('in');
-            });
-        }, { threshold: 0.12 }).observe(ridge);
-    } else {
-        ridge.classList.add('in');
-    }
-
-    check();
 })();
 </script>
 </body>
