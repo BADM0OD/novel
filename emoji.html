@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Emojiverse：深渊篇</title>
+<style>
+    :root {
+        --sky: #eefaff;
+        --sea: #2f8fa8;
+        --ink: #16323f;
+        --ink-2: #4d6b78;
+        --indigo: #0b1626;
+        --indigo-2: #101f33;
+        --aqua: #57c3d6;
+        --serif: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+        --sans: "Segoe UI", "Microsoft YaHei", sans-serif;
+        --emoji: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+        min-height: 100vh;
+        color: var(--ink);
+        font-family: var(--serif);
+        line-height: 1.9;
+        background:
+            radial-gradient(900px 520px at 12% -12%, #ffffff 0%, rgba(255,255,255,0) 60%),
+            radial-gradient(760px 460px at 88% -6%, #d6eef8 0%, rgba(214,238,248,0) 62%),
+            linear-gradient(180deg, #f4fcff 0%, #ddf1fa 46%, #cae6f3 100%);
+        background-attachment: fixed;
+        overflow-x: hidden;
+    }
+    body::before {
+        content: "";
+        position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: .45;
+        background-image:
+            repeating-linear-gradient(0deg, rgba(47,143,168,.03) 0 1px, transparent 1px 3px);
+    }
+    .wrap { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; padding: 0 22px 60px; }
+
+    /* ---------- 目录页 ---------- */
+    .hero { position: relative; text-align: center; padding: 82px 0 26px; }
+    .kicker {
+        font-family: var(--sans);
+        font-size: .72rem; letter-spacing: .5em; text-indent: .5em;
+        color: #5aa9bd; margin-bottom: 16px;
+    }
+    .hero h1 {
+        font-size: 2.5rem; font-weight: 600; letter-spacing: .18em; text-indent: .18em;
+        color: #12303d; line-height: 1.45;
+    }
+    .rule { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 30px auto 0; max-width: 320px; }
+    .rule::before, .rule::after { content: ""; height: 1px; flex: 1; }
+    .rule::before { background: linear-gradient(90deg, transparent, rgba(47,143,168,.4)); }
+    .rule::after { background: linear-gradient(90deg, rgba(47,143,168,.4), transparent); }
+    .rule i { width: 6px; height: 6px; background: var(--sea); transform: rotate(45deg); opacity: .7; }
+
+    .floaters { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+    .floaters span {
+        position: absolute;
+        font-family: var(--emoji);
+        opacity: .55;
+        animation: floaty 14s ease-in-out infinite;
+    }
+    .floaters span:nth-child(1) { left: 6%; top: 22%; font-size: 26px; animation-delay: -2s; }
+    .floaters span:nth-child(2) { left: 84%; top: 16%; font-size: 20px; animation-delay: -6s; }
+    .floaters span:nth-child(3) { left: 76%; top: 62%; font-size: 30px; animation-delay: -9s; }
+    .floaters span:nth-child(4) { left: 14%; top: 68%; font-size: 18px; animation-delay: -4s; }
+    .floaters span:nth-child(5) { left: 46%; top: 8%; font-size: 16px; animation-delay: -11s; }
+    @keyframes floaty {
+        0%, 100% { transform: translate3d(0, 0, 0) rotate(-4deg); }
+        50% { transform: translate3d(8px, -14px, 0) rotate(6deg); }
+    }
+
+    .toc { margin-top: 38px; }
+
+    /* 序章 */
+    .toc-item {
+        display: flex; align-items: center; gap: 16px;
+        padding: 22px 22px;
+        background: rgba(255,255,255,.72);
+        border: 1px solid rgba(47,143,168,.18);
+        border-radius: 10px;
+        text-decoration: none; color: var(--ink);
+        box-shadow: 0 8px 22px rgba(30,90,110,.07);
+        transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+    }
+    .toc-item:hover {
+        transform: translateY(-3px);
+        border-color: rgba(47,143,168,.42);
+        box-shadow: 0 16px 34px rgba(30,90,110,.14);
+    }
+    .tag {
+        font-family: var(--emoji);
+        font-size: 1.35rem; line-height: 1;
+        width: 34px; text-align: center;
+        filter: drop-shadow(0 2px 4px rgba(20,60,80,.12));
+    }
+    .toc-item .txt { display: flex; flex-direction: column; gap: 4px; }
+    .toc-item .lab {
+        font-family: var(--sans);
+        font-size: .68rem; letter-spacing: .26em; color: #79a6b4;
+    }
+    .toc-item .name { font-size: 1.16rem; letter-spacing: .04em; }
+    .toc-item .arrow { margin-left: auto; color: #7fb4c4; font-size: .95rem; transition: transform .3s ease; }
+    .toc-item:hover .arrow { transform: translateX(5px); }
+
+    /* 第一卷 */
+    .volume {
+        margin-top: 18px;
+        border-radius: 12px;
+        overflow: hidden;
+        background: linear-gradient(160deg, #16405a 0%, #0e2637 62%, #0b1c2b 100%);
+        border: 1px solid rgba(87,195,214,.24);
+        box-shadow: 0 14px 34px rgba(12,40,58,.20);
+        color: #e6f4f8;
+    }
+    .vol-btn {
+        display: flex; align-items: center; gap: 16px; width: 100%;
+        padding: 24px 24px;
+        background: none; border: 0; cursor: pointer;
+        color: inherit; text-align: left;
+        font-family: inherit;
+    }
+    .vol-btn:hover { background: rgba(87,195,214,.06); }
+    .vol-btn .tag { font-size: 1.3rem; }
+    .vol-btn .txt { display: flex; flex-direction: column; gap: 5px; }
+    .vol-btn .lab {
+        font-family: var(--sans); font-size: .68rem; letter-spacing: .3em;
+        color: #7fb9c9;
+    }
+    .vol-btn .name { font-size: 1.28rem; letter-spacing: .05em; }
+    .vol-btn .meta {
+        margin-left: auto;
+        font-family: var(--sans);
+        font-size: .7rem; letter-spacing: .2em; color: #83b8c6;
+        display: flex; align-items: center; gap: 12px;
+    }
+    .chev {
+        display: inline-block;
+        width: 8px; height: 8px;
+        border-right: 1px solid #9fd3df;
+        border-bottom: 1px solid #9fd3df;
+        transform: rotate(45deg) translateY(-2px);
+        transition: transform .4s ease;
+    }
+    .volume.open .chev { transform: rotate(225deg) translateY(-2px); }
+
+    .vol-body {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows .5s cubic-bezier(.22,.61,.36,1);
+    }
+    .volume.open .vol-body { grid-template-rows: 1fr; }
+    .vol-inner { overflow: hidden; }
+
+    .chain {
+        position: relative;
+        padding: 6px 22px 22px 34px;
+    }
+    .chain::before {
+        content: "";
+        position: absolute;
+        left: 33px; top: 4px; bottom: 32px;
+        width: 1px;
+        background: repeating-linear-gradient(180deg,
+            rgba(87,195,214,.55) 0 5px,
+            rgba(87,195,214,.18) 5px 10px);
+    }
+    .chapter {
+        position: relative;
+        display: flex; align-items: center; gap: 14px;
+        margin-bottom: 10px;
+        padding: 16px 18px 16px 20px;
+        background: rgba(8, 24, 36, .55);
+        border: 1px solid rgba(120, 200, 220, .18);
+        border-radius: 8px;
+        color: #dceef4;
+        text-decoration: none;
+        opacity: 0;
+        transform: translateY(-6px);
+        transition: opacity .45s ease, transform .45s ease, border-color .3s ease, background .3s ease;
+    }
+    .volume.open .chapter { opacity: 1; transform: none; }
+    .volume.open .chapter:nth-child(2) { transition-delay: .1s; }
+    .volume.open .chapter:nth-child(3) { transition-delay: .2s; }
+    .chapter:hover { border-color: rgba(120, 200, 220, .45); background: rgba(12, 34, 50, .75); }
+    .chapter .tag { font-size: 1.15rem; }
+    .chapter .name { font-size: 1rem; letter-spacing: .04em; }
+    .chapter .arrow { margin-left: auto; color: #6fa8b8; font-size: .9rem; }
+
+    .shelf-back { display: flex; justify-content: center; margin-top: 44px; }
+
+    .btn {
+        display: inline-block; padding: 10px 26px;
+        border: 1px solid rgba(47,143,168,.3); border-radius: 3px;
+        color: #2f7f95; text-decoration: none;
+        font-family: var(--sans);
+        font-size: .84rem; letter-spacing: .16em;
+        background: rgba(255,255,255,.55);
+        transition: all .25s ease;
+    }
+    .btn:hover { background: var(--sea); border-color: var(--sea); color: #fff; }
+    .btn[aria-disabled="true"] { opacity: .3; pointer-events: none; }
+
+    footer {
+        text-align: center; color: #7fa3b0; font-size: .76rem; letter-spacing: .16em;
+        padding: 36px 0 14px;
+        font-family: var(--sans);
+    }
+
+    /* 荣神 */
+    .guardian {
+        position: relative;
+        display: flex; justify-content: center; align-items: center;
+        height: 190px;
+        margin-top: 34px;
+        user-select: none;
+    }
+    .guardian .dog {
+        font-family: var(--emoji);
+        font-size: 180px; line-height: 1;
+        opacity: .055;
+        filter: grayscale(1) contrast(.5) blur(0.5px);
+        transition: opacity .6s ease;
+    }
+    .guardian:hover .dog { opacity: .11; }
+    .crack {
+        position: absolute; top: 0; left: 50%;
+        width: 190px; height: 190px;
+        transform: translateX(-50%);
+        opacity: 0;
+        transition: opacity .5s ease;
+        pointer-events: none;
+    }
+    .guardian:hover .crack { opacity: 1; }
+    .crack path {
+        fill: none;
+        stroke: #43d98d;
+        stroke-width: 1.4;
+        stroke-linecap: round;
+        stroke-dasharray: 260;
+        stroke-dashoffset: 260;
+        filter: drop-shadow(0 0 6px rgba(67,217,141,.85));
+    }
+    .guardian:hover .crack path { animation: crack 1.4s ease forwards; }
+    @keyframes crack { to { stroke-dashoffset: 0; } }
+
+    /* ---------- 阅读页 ---------- */
+    .reader { display: none; }
+    .reader.active { display: block; }
+    body.reading {
+        background:
+            radial-gradient(1000px 600px at 50% -10%, #14314a 0%, rgba(20,49,74,0) 62%),
+            linear-gradient(180deg, #0a1522 0%, #08111c 100%);
+        color: #cbd8e4;
+    }
+    .reader-top {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 26px 0 16px;
+        border-bottom: 1px solid rgba(120, 200, 220, .14);
+    }
+    .reader-top .bookname, .reader-top .back {
+        font-family: var(--sans);
+        font-size: .8rem; letter-spacing: .14em;
+        color: #7fa9bb; text-decoration: none;
+    }
+    .reader-top .back:hover, .reader-top .bookname:hover { color: #9fd6e4; }
+
+    .chapter-head {
+        position: relative;
+        text-align: center;
+        padding: 64px 0 36px;
+        overflow: hidden;
+    }
+    .marks { position: absolute; inset: 0; pointer-events: none; }
+    .marks span {
+        position: absolute;
+        font-family: var(--emoji);
+        opacity: .12;
+        filter: saturate(.7);
+    }
+    .marks span:nth-child(1) { left: 6%; top: 12%; font-size: 54px; transform: rotate(-14deg); }
+    .marks span:nth-child(2) { left: 22%; bottom: 6%; font-size: 34px; transform: rotate(9deg); }
+    .marks span:nth-child(3) { right: 8%; top: 8%; font-size: 46px; transform: rotate(11deg); }
+    .marks span:nth-child(4) { right: 22%; bottom: 2%; font-size: 28px; transform: rotate(-7deg); }
+
+    .chapter-head .lab {
+        font-family: var(--sans);
+        font-size: .7rem; letter-spacing: .3em; color: #6f9bab;
+        position: relative;
+    }
+    .chapter-head h2 {
+        position: relative;
+        margin-top: 10px;
+        font-size: 1.95rem; font-weight: 400; letter-spacing: .1em; text-indent: .1em;
+        color: #eaf5f8;
+        text-shadow: 0 0 30px rgba(87,195,214,.18);
+    }
+    .chapter-head::after {
+        content: "";
+        display: block;
+        height: 1px; width: 100%;
+        margin-top: 30px;
+        background: linear-gradient(90deg, transparent, rgba(87,195,214,.3) 22%, rgba(87,195,214,.3) 78%, transparent);
+    }
+
+    .paper {
+        background: linear-gradient(180deg, rgba(16,31,51,.86), rgba(9,18,29,.9));
+        border: 1px solid rgba(120, 200, 220, .12);
+        border-left: 1px solid rgba(87, 195, 214, .4);
+        border-radius: 2px;
+        padding: 44px 46px 50px;
+        box-shadow: 0 24px 60px rgba(0,0,0,.35);
+        font-size: 1.04rem;
+        line-height: 2.08;
+        color: #c8d5e1;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+    .paper p { text-indent: 2em; margin-bottom: 1em; }
+    .paper p:last-child { margin-bottom: 0; }
+
+    .chapter-nav {
+        display: grid; grid-template-columns: 1fr auto 1fr;
+        align-items: center; gap: 14px;
+        margin-top: 36px;
+        font-family: var(--sans);
+    }
+    .chapter-nav .nav-btn {
+        display: inline-block; padding: 10px 18px;
+        border: 1px solid rgba(120,200,220,.2); border-radius: 3px;
+        color: #9fc3d1; text-decoration: none;
+        font-size: .78rem; letter-spacing: .12em;
+        transition: all .3s ease;
+    }
+    .chapter-nav .nav-btn:hover {
+        color: #eaf5f8; border-color: rgba(120,200,220,.5);
+        background: rgba(87,195,214,.1);
+    }
+    .chapter-nav .nav-prev { justify-self: start; }
+    .chapter-nav .nav-next { justify-self: end; }
+    .chapter-nav .nav-btn.disabled { opacity: .25; pointer-events: none; }
+    .chapter-nav .back-to-toc {
+        justify-self: center;
+        padding: 10px 22px;
+        border: 1px solid rgba(87,195,214,.35); border-radius: 3px;
+        color: #a8d8e2; text-decoration: none;
+        font-size: .78rem; letter-spacing: .16em;
+        background: rgba(87,195,214,.08);
+        transition: all .3s ease;
+    }
+    .chapter-nav .back-to-toc:hover { background: rgba(87,195,214,.2); color: #effbfe; }
+
+    @media (max-width: 640px) {
+        .hero { padding: 58px 0 22px; }
+        .hero h1 { font-size: 1.85rem; }
+        .paper { padding: 26px 20px 30px; font-size: 1rem; line-height: 2; }
+        .chapter-head h2 { font-size: 1.45rem; }
+        .marks span:nth-child(1) { font-size: 40px; }
+        .marks span:nth-child(3) { font-size: 34px; }
+        .guardian { height: 140px; }
+        .guardian .dog { font-size: 130px; }
+        .crack { width: 140px; height: 140px; }
+        .vol-btn { padding: 20px 18px; }
+        .vol-btn .name { font-size: 1.1rem; }
+        .chapter { padding: 14px 14px 14px 16px; }
+        .chapter .name { font-size: .94rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        * { animation: none !important; transition: none !important; }
+    }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+    <section id="toc-view">
+        <div class="hero">
+            <div class="floaters" aria-hidden="true">
+                <span>🌊</span><span>🐦</span><span>🫧</span><span>💤</span><span>🌈</span>
+            </div>
+            <div class="kicker">EMOJIVERSE</div>
+            <h1>深渊篇</h1>
+            <div class="rule"><i></i></div>
+        </div>
+
+        <div class="toc">
+            <a class="toc-item" href="#chapter-p">
+                <span class="tag">⛓️</span>
+                <span class="txt">
+                    <span class="lab">序章</span>
+                    <span class="name" id="prologue-name"></span>
+                </span>
+                <span class="arrow">→</span>
+            </a>
+
+            <div class="volume" id="volume-1">
+                <button class="vol-btn" id="vol-toggle" aria-expanded="false" aria-controls="vol-body">
+                    <span class="tag">⛓️</span>
+                    <span class="txt">
+                        <span class="lab">第一卷</span>
+                        <span class="name" id="vol-name"></span>
+                    </span>
+                    <span class="meta"><span id="vol-count"></span><span class="chev"></span></span>
+                </button>
+                <div class="vol-body" id="vol-body">
+                    <div class="vol-inner">
+                        <div class="chain" id="chapter-list"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="guardian" aria-hidden="true">
+            <span class="dog">🐶</span>
+            <svg class="crack" viewBox="0 0 190 190">
+                <path d="M97,18 L104,46 L93,64 L110,84 L96,104 L114,124 L101,146 L110,172"/>
+            </svg>
+        </div>
+
+        <div class="shelf-back">
+            <a class="btn" href="./index.html">← 返回书架</a>
+        </div>
+
+        <footer>Emojiverse：深渊篇 · 连载中</footer>
+    </section>
+
+    <section id="reader-view" class="reader">
+        <div class="reader-top">
+            <a class="bookname" href="#toc">Emojiverse：深渊篇</a>
+            <a class="back" href="#toc">返回目录</a>
+        </div>
+        <div id="chapter-slot"></div>
+    </section>
+
+</div>
+
+<script>
+const DATA = {"prologue":{"id":"p","label":"序章","title":"九百余年后","marks":["⛓️","🐶","🌊","💤"],"paras":["金阳灿烈，大洋翻涌着翡翠色的波涛。浪尖上不时跃起一簇簇活生生的水花——🌊。那是一种奇怪的半透明浅蓝色生灵，头顶翘着波浪状的卷毛，成群结队地追逐着航船的尾痕。每当它们撞上船舷，就会炸开成细碎的水花，惹得水手们一阵笑骂。一只悬浮在半空的彩虹“🌈”正绕着桅杆打转，七彩的尾迹拉得很长，像一条飘逸的彩带。远处，一头庞大的🐋缓缓浮出海面，形似碧蓝的鲸鱼，喷出的水柱在空中炸开，化成一片水雾。几只像是海鸟的🐦张开双翼，琉璃般澄澈的身体穿过水雾，在空中划出一道道水迹。视野再扩大，无数的各种各样的emoji在这片天地中自得其乐。","这是一个奇怪的世界，这是一个美好的世界，至少目前如此。","这是海洋的深处，无风无浪，一种近乎凝固的庄严——方圆数里内，海水如一块完整的深蓝色琉璃，连波纹都被某种无形的力量抚平了。空气中弥漫着古老的寂静，连海鸟都本能地绕开这片海域，仿佛整个海洋都在向下方匍匐行礼。一圈⛓️在水面隐约浮现，它们从海底延伸环绕出来，如同某座沉没神殿露出水面的冠冕。细密而古老的纹路在⛓️身上明灭不定，像某种沉睡已久的意识正在海底深处均匀地呼吸。","海洋的正中心，海面上投下一片硕大的阴影。正上方，在半空中，悬浮着一只巨大的——🐶。一只🐶，甚至吐着舌头，眼睛很小，眼神呆傻，好像要滴出口水一样。它庞大的身躯约有几百米高，却也一动不动，与旁边的海水一样，彻底地凝固了，连一丝一毫轻微的抖动也没有。","🐶的旁边，一座小小的浮屿静静地悬浮着，底部倒悬的晶簇散发出柔和的淡紫色光晕，将下方一圈海水染成浅浅的琥珀色。浮屿不大，从这头走到那头不过百步，上面的建筑像是从某个不安分的梦里直接掉出来的——一座歪歪扭扭的三层小楼斜靠在另一座倒立的尖顶塔上，塔身又懒洋洋地搭着一道螺旋楼梯，楼梯尽头什么都没有，只悬着一扇半开的门。几扇圆窗各自长着不一样的颜色，像一群好奇的眼睛四处张望。屋顶上，风车叶片缓缓转动，几只亮晶晶的😴安闲地躺在风车的轴上，飘出的💤悠悠地融进空气里。一座吊桥从小岛边缘伸出去，在半空中晃了晃，正对着凝固的🐶。","小楼的门开了，一个消瘦的男人从里面走了出来。他走路很轻，像踩在棉花上，晃晃悠悠。一件松松垮垮的淡紫色长袍裹着瘦长的身子，领口歪歪斜斜地敞着，露出里面印着😴图案的旧棉衫。袍子下摆拖到脚踝，左边口袋破了洞，右边口袋鼓鼓囊囊塞着半袋流光溢彩的碎片和一本边角卷起的笔记，走起路来叮当作响。鞋子穿错了，左脚一只深蓝，右脚一只浅灰。","男人沿着吊桥走近🐶，半垂的眼睛里，瞳孔深处亮着一抹闪闪的光，看着这只造型滑稽可笑的emoji，他的神情却相当恭敬，甚至带着一丝崇拜。","门又响了，一个看着年轻许多的男人小步跑了过来，一头黑色的乱发朝四面八方翘着，发梢沾着来历不明的浅紫色粉末。外套歪歪斜斜挂在肩上，一只袖子卷到手肘，另一只拖到指尖。鼻梁高得不和谐，眼睛瞪得滚圆，瞳孔里映出🐶巨大的倒影。","“老师，我们什么时候换班啊，这里也太无聊了。”那个年轻的男人开口了。","他的老师伸出手在他脑袋上拍了一下，“放肆，这里哪不好了，在这里观察荣神也是很值得高兴的事情。”","学生撇撇嘴，“熊荣都变成大狗七百多年了，一直都没有任何变化，再狂热的粉丝也该消停了吧。”","老师猛地转过头，瞪大眼睛看着他。男人意识到自己说错话了，讪笑一下，不自觉向后退了两步。老师走过来，一脚把男人踹下了吊桥。","“啊啊啊啊啊啊啊啊！”男人大声惊叫着，右手光芒一闪，甩出了一颗一人多高的🫧，晶莹的泡泡稳稳地托住下落的男人，又缓缓地飘上了吊桥，落在了离老师几米远的地方。男人落地收起🫧，小声嘟囔起来。","“一直让人守在这里观测根本就没有意义嘛，这都七百四十七年了……”","老师半气半笑地开口：“说得简单，你七百四十七年前又没有亲眼目睹过那个场面，你那时候都没出生呢，你当然不知道荣神究竟有多伟大。”","他背过身去继续观察那只被称作“荣神”的🐶，“还有，点墨，再让我听见你直呼荣神的大名或者不尊敬荣神，送你去黑渊海沟泡一个月深海乱流。”","点墨吐了吐舌头，不再讲话了。","老师静静地看着“荣神”，眼眸里泛起一丝回忆的思索，“荣神啊……唉……”","“你知道的，七百多年前，海洋神殿发生异变，冲天的深渊光柱不断侵蚀着这个世界。你没有见过，你当然想象不出那是怎样的人间炼狱。Emoji和人都发了疯般，爱人相杀，亲子互食。昔日的搭档反目成仇，当时连灵圣都死了一位，被自己的emoji杀死的……”","说到此处，他忽然哽住了，点墨乖乖低着头，这故事他听了无数遍了，知道那个死去的灵圣是老师的挚友。老师当年亲眼目睹了挚友死去的过程，那个emoji也是老师处决的。","老师的语气骤然强烈，“所以你当然不知道！当荣神站出来的时候，他展现出的不可思议的强大，竟然将深渊的污染封锁了起来，尽管以自身凝固为代价，尽管被扭曲成一只狗的样子，也为这片天地换来了七百多年的太平！”","“唉……”他伸出手，想要去触摸那个伟大的🐶，却又顿住。他忽然死死地盯着这🐶身上的一处。","“怎么了？”点墨奇怪地凑上来看了一眼，也僵住了，“不是吧……真的假的……”","那只亘古不变的🐶背上，爬开了一条蜿蜒的裂缝，很细，但真真切切地存在。裂缝不断蔓延，裂口里透出淡淡的绿光，很快蔓延到了🐶的全身。","点墨的大脑完全宕机了，虽然他时常抱怨这份无聊的任务，也并不那么尊敬熊荣，但是从他从小到大的常识，和老师的浸染中可以确认一件事：如果荣神消失了，这个世界一定会完蛋。","老师猛地转身，飞快地跑向屋子，“快！快通知首领！让他也告诉公会和守望者他们！”","点墨呆呆地看着不断碎裂的🐶，背后的屋子里传来老师在近乎咆哮地传音，“我是朱博！对，荣神……荣神泯了！！！”","“荣神……泯了……”点墨呆滞地重复着这句话，好似从小看着东升西落的人们看见太阳爆炸了，一种习以为常的基石在大脑里崩塌了。","裂纹已经遍布荣神全身，终于，很清脆的一声响，那只悬浮了七百四十七年，沉默地守护了这个世界七个半世纪的大狗，在大海的上方化为淡绿色的光点——泯灭了。","“荣神泯了。”这个消息在瞬息间席卷了整个世界，疯狂的暗流开始涌起，世界的阴影中，一声狂笑响彻环绕。"]},"volume":{"id":"1","name":"梦魇与东海客","chapters":[{"id":"1","label":"第一章","title":"深渊的凝视","marks":["🧿","🤡","🏮","🌊"],"paras":["风未停。","料峭寒风微刺肌肤，熊荣深深呼吸一口，冰冷浸染胸腔，缓缓睁开眼，果然又是同样熟悉的场景。他在一个巨大的建筑里，站在一个外延的平台上，脚下的地板是木质的，深黄色，布满了斑驳的印子。平台的边缘是半人高的墙壁，上面有几块透明的板材，熊荣记得，这个是玻璃，这里是一个阳台，他在自己的梦里。","这是个怪梦，他已经不知多少次在这片阳台上睁开眼，透过玻璃，窗台外的天幕是淡淡的血红色，天幕下还有几栋大楼矗立着，或明或暗的玻璃密密麻麻如同怪兽的复眼。这不是他这十六年所在的世界，但他很熟悉，这里似乎是他的家乡。","“哗啦”，背后的滑动门被打开了。","熊荣顿时背脊一僵，这个梦他做过许多次了，从来没有过这样的变化。","他瞬间回头，呆在了原地。面前是一个和他长相一模一样的人，甚至不是他这十六年来的样貌，是他在这个梦里的，鸡窝头，棕衬衫，黑外套，与那个世界截然不同的样子。","这个“熊荣”向他走来，他的神态自负而狂傲，虽然顶着同样的脸，但他的身上带着一股咄咄逼人的邪气。","“熊荣”站在熊荣面前，两人的鼻尖几乎相触，他伸出手，捏住了熊荣的脸颊。那只手冰得像刚从深水里捞出来的石头，指尖用力，把熊荣两边的腮帮子往中间挤。他冷笑，嘴唇翕动，像是在说什么。熊荣听不见他的声音，也辨认不出口型，只能感觉到那只手在脸皮上掐出的钝痛，那痛感沿着颧骨一路往下，沉沉地压在脸颊两侧。“熊荣”掐着他脸步步前压，熊荣一退再退，背抵在了墙壁上。“熊荣”的手向下，掐住了他的脖子。他手向上提，熊荣被拎在了空中，并没有窒息感。","“熊荣”向外一抛，如随手丢弃垃圾般，熊荣从窗台落了下去。","并没有风声与失重感，黑暗的触手向他蔓延过来，缠住他，拥抱住他，熊荣的瞳孔慢慢失焦，越来越远的窗台边，血红色的天幕下，“熊荣”低头凝视着他，身影逐渐模糊，幻化成一个深邃的符号——🧿。","终点一点点地靠近，一切都像是一场很长的梦。","熊荣猛地睁开眼。","天花板蔓延着淡黄色的木纹，窗缝里斜斜地漏进来灿金色的日光。光打在天花板上，一条细细的金线。窗外，舟禹城的潮声哗哗涌起，控江入海口的海浪一下一下拍着堤岸，清脆的，稀碎的，持续不断，不紧不慢。几只海鸟形状的🐦掠过天空，琉璃色的翅膀把晨光折成碎碎的光斑，天花板上的金线一闪一闪。","楼下传来锅铲相碰的脆响，母亲在做早饭。远处一声汽笛拉长了嗓子，悠远地飘来，轮船驶入港口，码头人影攒动，船声，人声，水声，货物声。","舟禹城繁忙的一天开始了。","熊荣起床，换好衣服下楼。桌上传来诱人的香味，熊荣拉出椅子坐下，面前摆着一碗热气腾腾的阳春面。酱油色的汤底上油花静静地躺着，零星点着几粒葱花。","“儿子生日快乐。”","吴梦端着锅走过来，夹起一个煎蛋放在熊荣碗里，把筷子搭在锅边，伸手摸了摸他的头。","熊荣想起来，今天是他的十六岁生日，在这个世界，从今天起，他成年了。","“吱呀。”门被推开，一个高大的男人走了进来。","玄青色短褂绷他在身上，袖子卷到肘弯以上，露出的小臂粗壮结实，青筋沿着手腕一路爬进袖口，肤色是常年日晒出来的深褐，身形笔挺，像一只直立的黑熊。粗硬的头发剪的很短，略带灰白。","“爹。”","熊东点点头，拉出椅子坐下，“生日快乐。”","“你现在也成年了，老待在舟禹城未免狭隘。你李叔下周有条去和国的商船，我跟他讲了，你跟着去，见见世面。”父亲开门见山。","“李鑫去吗？”","“他去无羽城了，不去。”","李鑫是李叔的儿子，熊荣从小玩到大的兄弟。舟禹城作为世界第二大港口，李叔所在的旺腾商会是此处最大的几家商会之一，船货往来，络绎不绝。李鑫与他同岁，已经开始帮着打理生意了。","熊东从腰间解下一把幽蓝色的短刃，放在桌上，滑到了熊荣面前。熊荣伸手拿起，仔细打量，是一柄苦无。入手冰凉而坚硬，渗出一股寒气。是深邃的海蓝色，浑然一体，刃上的碧绿色纹路纵横扭曲，构成了一个🤡的符号。","“你李叔上次从和国带回来的，是名匠打的。你正好去和国，给你了。用的是灵锻术，融了一只🤡进去，假装成普通的附灵武器不会被发现。有一些特性，你自己琢磨吧。”","灵锻术？熊荣回忆起来，是一种被灵使公会严禁的锻造法，把emoji作为材料锻造成器，可以使器具携带某些特性。附灵术则是在锻造时用emoji的能力为器物附魔，效果差些，但是不被禁止。","熊荣收起苦无，轻轻点了点头，低头吃面。吴梦也在一旁坐了下来，三人一起安静地吃完了早饭。不知为何，熊荣隐隐有种感觉，这样安宁而美好的日子好像不多了。","吃完早饭，熊荣出了门，轻车熟路地绕过几条街，舟禹城的声浪迎面扑了过来。","船工的号子，货箱落地的闷响，滑轮绞索的嘎吱声，海鸟的啼叫，海水一刻不停地拍岸。一道一道声音汇入耳朵，像无数条溪流汇成一条大河。","他走上沿江大道的时候，视野骤然开阔。控江入海口在面前铺展开来，像一张巨大的碧蓝色绸缎在眼前铺展开来，远远地融进海天相接的那条线里。","而水面上，是数不清的船。","近岸，几十条小渔船挤在一起，船头挨着船尾，木质的船身被水泡成了深褐色，甲板上堆着刚卸下的渔获，一筐一筐的活鱼在阳光下闪着银白色的鳞光。稍远一些，商船一字排开，吃水极深，船身压进江面大半截，甲板上的货箱摞到了桅杆底部，隐约能看见工人们像蚂蚁一样在上面攀爬搬运。再远一些，几艘远洋大船的帆已经升了半幅，正在缓缓离港，船头劈开的浪花在阳光下碎成一片白沫，拖出一道长长的，渐渐扩散的尾迹。","岸上，车水马龙，货物快速地流动着。岸边，桅杆密密麻麻，帆布或收或展，在风中鼓动，翻卷，啪嗒作响。帆上染着不同颜色的纹章——赤色的、靛青的、靛蓝的、墨绿的——那是各家商号的印记。","码头上有几根粗大的木桩，漆着黑漆，被绳索勒出了深深的凹痕。工人们赤着上身，汗淋淋地在栈桥与船舷之间奔走，扛着麻袋，推着板车，吆喝着号子。有几个人蹲在栈桥边吃午饭，碗里的米堆成小山，上面盖着黑乎乎的酱菜，一边吃一边朝远处喊话，喊的是什么他听不清，被风吹散了。","海风袭人，熊荣的衣摆猎猎作响，他深深地呼吸一口，空气里微咸的海水味，夹杂着繁忙港口鱼龙混杂的各种气味，一起渗进心里。","这就是他十六年来的故乡。","十六年啊……熊荣心中暗自感慨，来到这个奇异的世界，已经十六年了。","是的，他不是这个世界的人，至少……曾经不是。从他小时候开始，脑子里总是莫名闪现出一些从未见过的知识或画面。他一度以为自己有癔症，直到他越来越大，大脑里出现的信息越来越详细，完整。他终于确定，自己不是疯了，他是穿越者。他来自一个叫做地球的地方，他的脑子里闪出的，是前世的记忆。","然而记忆依旧很破碎，尤其是关于自己前世的身份，他几乎没有一点印象，甚至一想就头痛。说不定是好事，他安慰自己。依照他前世读小说的经验，自己这是主角的标配。","熊荣伸手握住兜里的那柄苦无，冰凉坚实。这个世界还挺不错的，他想。emoji，超能力，这些中二期的幻想居然成为现实，自然是令人热血沸腾的。尤其是今天他终于16岁了，在这个世界，他是一个成年人了，终于有资格成为一名合法的灵使——这个世界的超能力者的名字。","这个世界里充满了活着的emoji，按照他前世的小说来解释，这是一些类似于天道精灵的生物，每一个都蕴含着特殊的概念与能力，以情绪之力为核心。大部分的Emoji都没有灵智，只有纯粹的本能，而人类中有天赋的人可以与emoji缔结契约，成为灵使。灵使可以使用emoji的力量，emoji可以借助灵使开启灵智。这种古老的契约已经延续了数百年，也正有无数的年轻人满心期待地踏上这条路，也包括熊荣。","熊荣伸出手，海风轻轻地绕过指尖。沿着大街继续直行，很快，他来到了一座巨大的建筑前。通体用灰白色的条石砌成，石面被打磨得光滑平整，缝隙里嵌着深色的勾缝线，横平竖直，像一张被拉紧的棋盘。屋顶不是瓦片，是一整块巨大的，微微拱起的深蓝色琉璃。边缘垂下一圈细密的铜铃，在风里偶尔碰响一两声，清脆而短促。琉璃面上勾勒满了深浅不一线条，构成了五花八门的emoji的形状。清晨日光落上去，折射出淡蓝色的光晕，一团一团地在屋顶上浮动，聚散，像有看不见的手在拨弄水面。","大门开在正中，两扇厚重的木门对开，漆成深靛色，门板上用浅色的木料拼接出复杂的几何纹样。门楣上方悬着一块铸铁横匾，字是阴刻的，涂了金漆，笔画端端正正，四个大字，“灵使公会”，下方一行小字，“舟禹城分部”。横匾两侧各嵌着一盏长明灯，灯罩是乳白色的琉璃，里面火苗缓缓跳动，日夜不熄。","门前的台阶不高，只三级，但每一级都比寻常台阶宽出一倍有余。台阶两侧各立着一根石柱，柱身刻着螺旋上升的纹路，隐约能看出许多emoji的轮廓。","熊荣踏进大门，这里人流庞杂，各式打扮的人走来走去，许多的身边都跟随着各种各样的emoji，这是来自各地的灵使。熊荣大步走进，来到了公会的前台。","前台用一整块深褐色的木头斫成，木纹顺着台面横着走，像水流过河床留下的痕迹，台面被人摸得很光滑，上面摆着几样东西——一盏小铜灯、一只墨水瓶、一沓裁好的纸、两枚叠在一起的铜印，还躺着一只安安静静的✏️。","台后坐着一个看起来三十出头的女人。她穿着一件淡绿色的长裙，领口绣着细密的蓝色花纹。头发用一根木簪松松地挽在脑后，几缕碎发从鬓边垂下来，搭在耳侧。眉眼很柔和，嘴角像是天生就带着一点弧度。熊荣注意到她的肩膀上，一只👧正坐在那里，晃着双腿。","“您好。”她说，声音不高不低，“来办什么的？”","熊荣看见她胸前的工牌，上面写着她的名字，杨荔。","“刚满十八……不是，十六岁。我来登记测试能不能当灵使。”不知怎的，熊荣竟有些紧张。","“好嘞，别紧张，先把这份表填了。”杨荔笑了一下，把一张表格推到熊荣面前，上面是如姓名生日一类的基本信息。那只✏️咕噜咕噜地滚到了他的手边，熊荣拿起来，快速地填好了。","“好的”杨荔接过表格检查了一下，递给了肩上的👧，“小草莓，带哥哥去测试室吧。”👧伸出黄澄澄的小手接住表格，从肩膀上飘了起来，对着熊荣招了招手，他赶忙跟上。","跟着小草莓👧走上了三楼，穿过长长的走廊，两侧排列着许多扇门，👧在一扇门前停下，伸出小手敲了敲门。","“请进。”传出亲和的女声。","推门进去，白色的墙壁布满灰色的花纹，没有窗户，顶灯是圆形的，光线柔和均匀地铺满整个空间。房间中央放着一只矮木桌，桌上摆着一枚拳头大小的透明圆球。","桌后坐着一个女人，看起来五十多岁，棕黄色的短发披到肩头，掺着不少银白色的发丝，在灯光下泛着一层柔和的灰白光泽。皮肤不算好，眼角堆着细密的纹路，手背上的皮肤也松松地起了褶。但她的眼睛很亮，视线越过桌面落在熊荣身上，不紧不慢，带着一种阅历丰富的从容。胸前的工牌上写着名字，钟薇子。","“坐吧，孩子。”","熊荣在对面坐下，桌子矮，膝盖几乎要碰到桌板。","“今天刚满十六岁吧？”她问。","“嗯。”","“哈哈，你们这些小朋友都这样，迫不及待的。”她轻轻地笑起来，“测试两件事。第一，看你感不感觉得到灵力——也就是情绪力。第二，看你天生的灵力量有多大。前一个是你有没有资格当灵使，后一个是你的上限在哪里。”","钟薇子伸出手，在空中轻轻一挥。瞬间，屋顶的灯灭了，一片漆黑。","“别紧张，静心去感受自身和环境中的灵力。”","熊荣闭上眼，漆黑的空间中，宁心静气。慢慢地，仿佛从心神里睁开了一只眼睛，他“看见”了。","滚烫的，冰冷的，活泼的，沉静的，温和的，暴动的。在他的感应里，空间中出现了一条条形形色色的“鱼”，带着不一的特性在空中游荡。同时，从自己的身体中，仿佛一颗幼芽在破土而出，痒痒的，有什么东西冒了出来。","熊荣睁开眼，漆黑的房间里，一个个斑驳闪烁的光点漂浮在空中，幻化成一缕缕光怪陆离的彩斑。墙壁上灰色的花纹亮了起来，闪烁着彩色的光芒，无数细小而精致的emoji符号嵌在纹路里，微微闪烁，一整面墙都在呼吸。从他的心口和眉心，淡淡的光芒透体而出。","钟薇子坐在桌对面，她的轮廓在黑暗中镀上了一层浅淡的光边，发梢上的银丝被照得微微发亮，她正安静地注视着他，嘴角有一点笑意，像在欣赏什么意料之中却又令人高兴的画面。","他抬起头，吸了一口气。空中的光点们像是感应到了他的呼吸，微微浮动了一下。彩色的光芒在他周身交叠、流动、破碎又重聚，像一场微型的、无声的极光正在他身体周围缓慢旋转。","钟薇子轻轻挥手，头顶的灯亮了起来，熊荣控制着那只新的眼睛缓缓合上，光彩消失了，房间又恢复了原样。","“不错不错，感知力很强呀小朋友。”钟薇子笑着在表格上写下了几笔，“接下来把手放在这个水晶球上，看看你的灵力量有多大。”","熊荣依言照做，在他的指尖触碰到玻璃球的瞬间，一抹明亮的绿光在玻璃球中闪烁起来。","“哟，绿色的，不多见呢。”钟薇子边写边说，“光的亮度代表了你的灵力多少，光的颜色是每个人独一无二的情绪印记，世界上没有任何两个情绪色一样的人哦。”","钟薇子写完表格，把那张纸递给了一旁浮在空中的👧，“好啦，恭喜你呀，你的天赋挺不错的呢，快去办手续吧。”","熊荣兴奋地搓了搓手，略显拘谨地朝钟薇子笑了笑，跟着👧走出了房间。","来到二楼，嘈杂的大厅尽头几个窗口已经排起长队，稍微等了一会，熊荣终于办好了手续。他从窗口接过那只小小的布袋，袋子上画着灵使公会的徽记——一个😶‍🌫️的符号。窗口后面的年轻男人头也没抬，把布袋推过来之后又补了一句：“袋子里是你的灵使证，可以在所有的公会分部接领委托，交易物品。”他顿了顿，“还有新人手册，回去自己看。里面写了灵使的基本常识，还有各地公会分部的地址，别弄丢了。”熊荣拿起布袋，朝窗口的人点了点头，转身穿过大厅。","大厅里的人比刚才更多了。一个年轻的女人正蹲在角落里给一只🐕挠痒痒，那只🐕的尾巴摇得飞快。两个穿着深色长袍的中年男人并肩往外走，身后跟着一只慢悠悠飘浮的📜，纸页在空气中自行翻动。","他走出公会大门，户外的阳光落下来，比进来时更偏北了一些，也更热了一些，照在脸上有一点烫。屋顶琉璃面还在反光，流动的光斑在门前的台阶上，像一群透明的蝴蝶在日光里起舞。","沿着来时的那条街往回走。街两侧的屋檐依旧挑着那些招牌，铁砧纹的、草药束的、蒸笼图案的，一块挨着一块。东海的潮声在他的右手边不息地拍打着，太阳已经转到了东北方。熊荣想起来前世的太阳是从东到西竖着转的，这个世界不是，这里的太阳和月亮在世界的边缘从东到西绕着圈转。所以据说中土以前是看不见日月的，只有不变的漫天星辰。前世的地平说者大概会很喜欢这个世界，因为这里就是平的，他莫名想到。","熊荣继续走。舟禹城在他周围轰鸣，流动，吐纳。所有的声音叠在一起，厚厚地裹着他。他的脚步比来的时候稳了一些，口袋里的苦无随着步伐一下一下贴着大腿外侧，像一个沉默而持久的提醒。","他拐进那条熟悉的巷子，屋檐的影子斜斜地落在石板地上。他走到自家门前，开门，一只白中夹棕的长毛🐈悠闲地踱着步走过来。","“奇奇过来。”","🐈听话地蹭了蹭熊荣的手，柔软而温暖。他忽然想起早晨父亲说的话，下周，他就要暂时离开这里了，离开这个十六年来的港湾。","阳光灿烂，碧海青天。"]},{"id":"2","label":"第二章","title":"海洋与恶灵","marks":["🐋","🫧","🪓","🌙"],"paras":["时间好像越走越快，至少熊荣的体感如此。一个星期以比他想象中快得多的速度飞逝而去，好似瞬息间，他已经站在码头上了。","海风裹挟着咸湿的气息舔舐着他的脸庞，青天湛蓝，万里无云。在面朝的正东方向，太阳拖曳着灿金色的光痕从世界的另一端呼啸而来。巨大的日轮将光芒倾洒下来，世界如琉璃般清晰而富有光泽。","脚下的碎浪不停地拍打着栈桥下支撑的木柱，远处的海面气定神闲，任由风轻轻地拂起一荡荡起伏的波纹，勾勒出一条条的灿烂的金边。海洋蓝得深邃，宽得无际。","熊荣转头，沿着右边延伸出去的栈桥一路走出大陆的范围，尽头的海面上，正矗立着一座大船。","船体深褐，吃水线下的船底深深地没在水下，稳稳地承载着硕大的船体。一块宽阔的钢板从登船口的斜斜地落下来，搭在栈桥上。熊荣走上去，脚下坚硬，却不是陆地的安稳感了。","走上甲板，脚下是微微的弹性，船很大，没什么摇晃感。最高的那根桅杆顶上，旺腾商会的旗帜迎风招展，墨绿色的布面翻涌起碧浪，上面是一个巨大烫金💰图案。","身侧的舱门被推开，一个精瘦的男人走出来，一件洗得很薄的灰布短衫挂在身上，领口松松地敞着，露出一截晒成深褐色的脖子和锁骨。他的肌肤带着风与水洗礼后的痕迹，质感像是用了很久的粗麻绳。令人注意的是腰带上别着的一柄🪓，是一只emoji，刃尖映着淡淡的冷光。","“李叔。”熊荣朝他打招呼。","李叔拍拍他的肩膀，瞥了一眼他右手提着的包裹，“第一次出海啊，跟我来吧，带你先去放行李。”","走进舱门，沿着木梯一路向下，走入甲板下的生活区，拐过几个弯，走到了一间房前。门开着，里面不太大，只堪堪放下一张单人床和一个柜子。","“海上生活条件不比岸上，这已经是最大的几间房了，你第一次出海就不让你和水手一起住了。还有很多别的事情，不过你爹毕竟是军营里的，这点困难你肯定也没事的。”","熊荣点点头，走进房间开始整理自己的行李。李叔靠在门框上，看着他弯腰忙碌，感叹道，“你这孩子从小就是不爱讲话，不知道是不是你爹的影响，果然什么人生什么种。”","他絮叨着，突然想起来什么。","“对了，那把终呙刃你爹给你了是吧，琢磨出啥门道了没？”","“终呙刃？”熊荣思索了一下，从兜里掏出那把深蓝色的苦无，“原来它还有名字吗？”他将灵力注入其中，刃上的🤡纹路顿时闪起妖艳的绿芒。他意念一动，终呙刃从指尖漂浮而起，绕着他飞了一圈。","这一周的时间他大部分都用来研究这把苦无了，算是初步掌握了一些特性，比如：","“终呙刃能飞？”","熊荣看着一脸诧异的李叔，自己也懵了，“原来您不知道啊？”","李叔略显尴尬地挠了挠手臂，“我只知道它能分身，毕竟这个级别的武器很少有把飞行锻造成能力的嘛，有点造诣的灵使都能御器飞行。”","“怎么不能是我学会御器了呢？”","“你才接触灵使一周呢，你没那天赋。”李叔开朗地笑了笑。","“呃……好吧……”熊荣摸了摸鼻子，有些无奈地应道。","“对了，和国那边不像咱们玄朝太平，它们的皇室和起义军已经打了几年了，国内局势动荡。咱们是和正统皇室交易的，你跟着队伍别乱跑，不然出了什么乱子我可救不了你。”","“内乱？那我们还去啊？”","“没那么夸张，咱们去的区域还算太平的。农民起义，掀不起什么大浪的。”","“他们为什么起义呢？”","“还不是吃不上饭，我帮侬讲，哪里都一样的。和国连续好几年天灾，收成不好，上层冗官冗爵，百姓都饿死了，豪族还歌舞升平，农民就暴动了。他们不叫起义，他们管这个叫‘一揆’。”","“那怎么几年还在打呢，他们的皇室这么弱吗？”","“嘁。”李叔轻笑了一下，“你以为别的国家都像玄朝一样强制所有成年民众去测试？强制所有灵使登记在册吗？”","“他们有很多实力不俗的灵使散落民间，被称作浪客。皇室的战力主要是两大家族的势力和直属皇室的天照军，两大家族各自心怀鬼胎，天照军实力不足，起义军往往都是不怕死的人，所以僵持到现在。”","“嗯……”","“好了，快要出发了，我去检查一下，你熟悉熟悉船上的构造。”李叔摆摆手，转身走了。","熊荣低头看着指尖旋转的终呙刃，幽绿的光影闪烁，心念一动，一旁瞬间幻化出一柄一模一样的苦无。和国啊……他在心里默念，他的旅途，就要开始了。","船在一个时辰后解缆的，宽阔的帆布被升起来了，风灌进帆面，把它撑成了一面鼓鼓的弧形。船身微微倾斜了一下，然后开始移动。泊位的木桩从船舷边缓缓退后，栈桥退后，码头退后。码头的木桩，索揽，货物，工人，在视野里越来越远，越来越小，被渐渐宽阔的水面包围起来。","熊荣站在船尾，看着舟禹城的轮廓逐渐收缩。起初还能分辨出公会的蓝色琉璃顶在夕照里反着光，像一小片斜扣在屋顶上的海。然后是码头上的吊架，桅杆，货栈顶，所有他认识的地标都越缩越小，最后被地平线收成了一整条灰蓝色的细线，融进了天海相接的柔光里。","他转过身，面前只有海了。","海上的日子开始了，李叔说大约是一个星期的路程。船上的生活很好，唯一美中不足的是每晚依旧纠缠的噩梦，一样的场景，甚至愈发清晰。","最初几天，熊荣还对一切充满新奇，听水手吹牛，在甲板边看壮阔的深海，或者熟悉终呙刃的技巧。终呙刃拖着蓝绿相间的尾迹在甲板上跳跃起舞，或在贴着海面转圈滑行，掀起一条长长细细的浪痕。","十米，这是熊荣目前御刃飞行距离的极限。在浩瀚的大海上，在开阔的苍穹下，少年与他绚烂的飞刃肆意翱翔，就像第一次跳下悬崖的幼鹰，纵情伸展开自己稚嫩的翅膀。","熊荣靠在甲板的围栏上，向西边看，远处的大陆已然融入海天一线的影子。仰头看着碧蓝的天穹，那里悬着一团模糊的，灰白色的影子。它不像普通的云，它太辽阔了，辽阔到相隔如此之远还能看到模糊的轮廓，边缘柔和地融进周围的蓝色里，那是一片属于天空的陆地——天空最大的浮屿。云岛，风息平原。","这个世界的天空并不是空旷的，在天空的领域，漂浮着大量违反前世物理规律的浮屿。据说那里是与地面和海洋都截然不同的世界，在浮屿之上有着“云上人”，他们世代生活在天空，有着自己的文化与势力。但是天空太过遥远，在舟禹城，熊荣都只能模糊看到浮屿的轮廓。到了海上，能看清的只有最大的风息平原了。传说那里致密的云层上，长满了叫做云草的植物。","对从小就听着这些故事长大的陆地人来说，天空无疑是浪漫与自由的代名词。此刻，沐浴在金阳的暖辉里，在辽阔的大海上，熊荣忽然感觉想象中自由不羁的风息平原就在脚下，就在翡翠涌动的水波里，就在翱翔的终呙刃上。","熊荣伸出手，好像要去触碰那遥不可及的云岛，五指握紧，终呙刃浮动着光斑，攥在了手中。","“两天了，感觉海上怎么样啊。”","李叔粗犷的声音从一侧传来，熊荣转过头去。","“是不是感觉很浩瀚，很自由？”","熊荣微微笑笑，点点头。","李叔走过来，也靠在围栏上，看向无尽的蓝海。","“尽管看了不知多少次了，每次出海我也还是会被这样雄伟壮丽的世界震撼到啊。”","他转头看向熊荣手中的终呙刃。","“世界很大，小伙子，足够你向任意一个方向走上一辈子。所以不用担心，大胆去走就是了。”李叔看向熊荣的脸。","少年抬眸，他的眼睛里有天空，有浮屿，有大海，有桅杆。那不是他眼里的天空，浮屿，大海和桅杆，李叔知道，那是属于少年自己的世界。","第三日深夜。","熊荣在海洋颠簸的梦中被吵醒。","“咚咚咚咚咚。”有人急促地敲着门。","“小子快醒醒，你运气好，咱们遇着大家伙了，再不起来你得后悔一辈子。”李叔熟悉的声音从门外传来。","“来了！”熊荣朦胧间应了一句，摸索着去穿衣服。","等他走上甲板时，围栏边已经站满了水手，所有人都屏住呼吸，紧紧地盯着海洋上的某个地方。熊荣看见李叔的招呼，跑了过去，挤到了围栏边。他的手搭上冰凉木头的瞬间，眼神也凝固住了，不自觉屏住了呼吸。","这是他此生见过最大的鲸鱼。","起初只是一道弧线，极缓极缓地从海面以下抬升出来。那道弧线是深蓝色的，比夜空的深蓝更深一些，像一块被锻打了很多遍的蓝钢，表面浮着一层细细的银色。弧线越来越高，越来越高，露出了水面之上的部分越来越宽，像一座缓缓浮起的岛。","然后整头鲸鱼出来了。","它的身体是深蓝色的，表面上布满了细密的银白色纹路，那些纹路沿着它身体的弧度流动，旋转，分岔又汇合，像一张被绘制在体表上的星图。每一根线条都在缓缓地明灭，以极慢的节奏呼吸。月光落在那些纹路上的时候被折射成细细的光丝，散布在它身周的海面上，像碎了一地的星星。","它的头部微微向前探出，轮廓浑圆而宽阔。眼睛在侧面，那只眼睛巨大而深黑，像一口倒映着夜空的古井，里面没有波澜，没有情绪，只有一种亘古的宁静。它看着船的方向，又像没有在看船，只是恰好处在这样一个位置上，让船进入了它的视野。它的尾巴只是轻轻地，几乎不可察觉地摆动了一下，然后整片海面跟着那一下摆动微微地起伏了一下，像一张巨大的绸缎被人在远处轻轻地抖了一下。船身在那个起伏里轻轻地抬了一下又落回去，像在一只巨大的，缓慢的呼吸里被托了一下。","熊荣注视着鲸鱼的时候，他的大脑脱离了意识在运转。他只觉得一片清明，每一缕思绪仿佛都变成一条条清澈的琉璃丝，在宁静中交汇，结合。","巨鲸缓缓沉入海面，不知多久，海面上还是冻结般的宁静。","半晌，水手们终于慢慢回过神，细碎的议论蔓延开来。","“那是什么？”熊荣问道。","“迪普希克。”李叔静静地说。","“迪普希克？智慧之源的眷属？”","“嗯，迪普希克。”李叔终于把眼神收了回来，“十大源神之一，智慧之源的眷属，一只巨大的🐳。没见过这么庞大的emoji吧，甚至比真正的鲸鱼还要大。”","“它怎么会在这里？”","“自从十大根源在十六年前集体消失之后，他们的眷属和造物有些没人管，就自己到处跑。比如迪普希克，这些年来已经在各地海域被目击了，没想到我们运气这么好，居然也能见到。”","“没人打它的主意吗？”","“哈哈哈哈，打迪普希克的主意？”李叔大笑起来，“根源的眷属可不是能随意招惹的，哪怕是不善于战斗的智慧之源。迪普希克，它的名字在帝国语中是思考，求索的意思，传说中蕴含了这个世界最核心的知识。知识往往可以等价于力量，甚至比力量更强，有脑子的人应该都不会招惹它。”","“真是多事之秋啊。”李叔感叹道。他倚在木栏杆上，掏出烟斗，深深地吸了一口。烟雾在空中绵延，变幻，消散，化在大海宽广的怀抱里。","第六日。","熊荣已经习惯船上的生活了，甚至已经可以和水手们打成一片。甚至出乎意料的好事是，自从那天见过迪普希克后，那缠人的噩梦已经没再出现过了。如此前的每一个早晨一样，熊荣撑在栏杆上，眺望着碧蓝的大洋。正前方，初曦从东南方席卷而来，太阳再一次挟着万丈金光，从世界的另一端转来。","甲板别的地方，几个水手正在忙碌。两个水手正蹲在船头，一个在整理盘成一圈的长绳，另一个在检查锚链的固定桩。李叔从他身后走过来，也在栏杆边站定，朝着太阳的方向眯了眯眼。","“明天早上就能到了。”他把烟斗在栏杆上磕了磕，“今晚早点歇着。”","熊荣应了一声，刚想开口问和国的港口是什么样的，忽然感到船底传来一声沉闷的震动，带起一阵低沉的，传遍整条船的震颤。","熊荣抓住栏杆，李叔的动作比他更快，已经在转身朝船舷外侧看。他没有说话，但熊荣看见他的手已经握住了腰间的🪓。那些从边缘翻上来的浪花变了颜色，带着一种妖艳的粉红，上面浮着一层细密的白色泡沫。水花大起来，比刚才更密更急，拍在船舷外侧发出沉闷的声响。","李叔侧身朝甲板上喊了一句，几个水手同时放下了手里的活，开始往桅杆方向移动。有人在收紧绳索，有人在搬动甲板上散落的木桶。甲板上的气氛变了，没有人再说话，所有人的动作都比刚才快了半拍，像一只正在合拢的拳头。粉红的水域正在变大，从船底向船头方向扩散开来。","“去船舱里待着——算了，在这看着吧，你也不是小孩子了。”李叔急促地交代一句，解下腰间的🪓，紧紧攥在了手里，向船尾跑去。","船尾的浪猛地大了，一股硕大的水花溅起，那引起异变的东西终于露出了真容。它破开粉红的浪花，跃出海面。","它的身体近似人形，极胖，像一个被灌满了水的巨大皮囊，表面是光滑的艳红色，和它周围被染成粉色的海水几乎融成一片。四肢也又粗又圆，像过度肥胖的人体，高高地挥舞起来。末端是扁平的蹼，指缝之间长着粉红色的薄肉膜，在空气中微微颤动。","它的脸是整团身体上最醒目的地方，一张巨大的圆脸，嵌在那颗球形的身体正前方，占去了将近一半的面积。皮肤是同样的艳红色，但比身体其它部分的颜色更深一些，像是涂了一层湿漉漉的油彩。它的眼睛很小，圆圆的，瞳孔是深红色的竖缝，不停地转动，左眼和右眼各自朝着不同的方向滚动。头发是褐黄色，如海草般卷曲，乱蓬蓬地黏在这怪物丑恶的躯体上。它的头上顶着两只角，表面泛着一种半透明的蜡质光泽，像被磨光滑的珊瑚枝，粉白相间。","李叔站在船尾的栏杆上，🪓的刃面正对着它。船在摇晃，李叔却稳稳地立在窄窄的栏杆上，像锚定在风浪里的一根桩。他的目光没有移开，但他开口了。","“这是和国附近海域特有的恶灵，或者叫妖怪，也就是那些恶意的emoji。这一只是👹🌊，和国人叫它潮汐般若。”","甲板上的水手们已经在李叔说话的同时完成了重新站位，有人手握长杆，有人提着短斧和勾索，在甲板上形成一个防御圈。而在栏杆之外不远的地方，那张圆形巨脸上挂着裂到耳根的笑容，猛地窜了过来，带起一片粉浪。","李叔扬起🪓，刃尖闪起灿亮的白光，从下向上迎了上去。潮汐般若挥出一只爪子去接，冷芒一闪，它的爪子从中间裂成两半。","般若吃痛，发出一声尖利的嘶鸣，落回水中，粉红色的浪里晕开一抹深紫色的血迹。海下暗流狂涌，下一瞬，一股深红色的水柱飞射向李叔。","李叔高高跃起，闪过那道水柱，逸散的水滴砸在甲板上，木板滋滋作响，留下几个灼烧般的黑点。海面下一股水流狠狠撞在了船尾，整艘船猛地摇晃一下，向侧边飘了一些，李叔被留在空中，下方就是粉波涌动的海面。粉浪破开，潮汐般若已经迫不及待地张开血盆大口，对准了坠落的李叔。","李叔在空中一甩手臂，🪓脱手而出，如一道雪白的流星，呼啸着飞向潮汐般若咧开的大嘴，自身则借力向后，落回了甲板。熊荣看不见，只听到船下传来一声嘶哑的哀嚎。李叔伸出手，🪓旋转着，从船下飞了上来，稳稳落入手中。","半晌，水下再无动静，船侧的海浪渐渐变回了纯净的深蓝。凝重的气氛慢慢缓和下来，李叔将🪓挂回腰间，走过来。","“感觉怎么样，第一次亲眼见到灵使的战斗吧。多看看多学学，战斗不是表演，动作实用就好。”","熊荣回忆起刚刚的画面，李叔的一举一动都极其简洁，几乎没有浪费体力的多余动作。他开始在脑中演练，若是自己遇到这样的战斗，要怎么做。","“各种各样的emoji你也要多认识认识，公会发的手册附录里有图鉴，潮汐般若👹🌊就是和国常见恶灵般若👹的变种。还有各地的文化习俗也可以去了解，比如咱玄朝管emoji叫情灵，和国叫式神。”","“这只👹🌊的实力不强，一般不会主动攻击船只，最近不知道怎么了，怪事特别多。唉，咱们老百姓，日子该过还是得过啊。”","甲板上收拾得很快，被腐蚀过的木板被水手用清水冲洗，又用粗布擦干，露出几道浅浅的焦痕。船重新稳住，朝东继续走。","熊荣一直没有回舱，他靠在船尾的栏杆边，终呙刃一圈一圈地飞行，愈发凌厉，愈发鬼魅不定。夕阳转到了北面，正在一点一点地淹没进远方的云海。东南方向，月亮露出一条皎白的弧线。","第七日清晨。","熊荣站在船体的甲板上，手扶着木头。船头前方，风迎面吹来，带着一股泥土，渔获和炊烟的气味，混在咸涩的海风里。熊荣眯起眼望向远处，海天相接处，一道灰绿色的轮廓正由一道窄线延展开来，显露出山峦起伏的弧度，连绵的深色植被的轮廓。","山脚以下是一片平缓的坡地，顺着海岸线展开，被细密的房屋填满了。屋顶的颜色各异，深灰色的瓦，赭红色的陶土，暗褐色的木板，密密麻麻地挤在一起，像一片被风浪推上岸的碎贝壳。房屋之间的缝隙里伸出几根细长的木杆，杆顶飘着各色窄长的三角旗，被海风吹得猎猎作响。","水面已经从深蓝变成了浅灰色，在晨光里泛着一层柔和的光泽，栈桥从岸边伸出来，一根一根的木桩笔直地插在水里，被海水浸泡过的部分长了一层暗绿色的苔藓。","和国，此行的终点，到了。"]}]}};
+const CHAPTERS = [DATA.prologue].concat(DATA.volume.chapters);
+
+const tocView = document.getElementById('toc-view');
+const readerView = document.getElementById('reader-view');
+const volume = document.getElementById('volume-1');
+const volToggle = document.getElementById('vol-toggle');
+const chapterList = document.getElementById('chapter-list');
+const volCount = document.getElementById('vol-count');
+const slot = document.getElementById('chapter-slot');
+
+document.getElementById('prologue-name').textContent = DATA.prologue.title;
+document.getElementById('vol-name').textContent = DATA.volume.name;
+volCount.textContent = DATA.volume.chapters.length + ' 章';
+
+DATA.volume.chapters.forEach(function (ch) {
+    const a = document.createElement('a');
+    a.className = 'chapter';
+    a.href = '#chapter-' + ch.id;
+    a.innerHTML =
+        '<span class="tag">' + ch.marks[0] + '</span>' +
+        '<span class="name">' + esc(ch.label) + ' · ' + esc(ch.title) + '</span>' +
+        '<span class="arrow">→</span>';
+    chapterList.appendChild(a);
+});
+
+function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function setVolume(open, remember) {
+    volume.classList.toggle('open', open);
+    volToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (remember) {
+        if (open) history.replaceState(null, '', '#volume-1');
+        else history.replaceState(null, '', location.pathname + location.search);
+    }
+}
+
+volToggle.addEventListener('click', function () {
+    setVolume(!volume.classList.contains('open'), true);
+});
+
+function showToc() {
+    tocView.style.display = 'block';
+    readerView.classList.remove('active');
+    document.body.classList.remove('reading');
+    window.scrollTo(0, 0);
+}
+
+function showChapter(i) {
+    const ch = CHAPTERS[i];
+    const prev = CHAPTERS[i - 1];
+    const next = CHAPTERS[i + 1];
+
+    const p = prev
+        ? '<a class="btn nav-btn nav-prev" href="#chapter-' + prev.id + '">← 上一章</a>'
+        : '<span class="btn nav-btn nav-prev disabled">← 上一章</span>';
+    const n = next
+        ? '<a class="btn nav-btn nav-next" href="#chapter-' + next.id + '">下一章 →</a>'
+        : '<span class="btn nav-btn nav-next disabled">下一章 →</span>';
+
+    const marks = ch.marks.map(function (m) { return '<span>' + m + '</span>'; }).join('');
+    const body = ch.paras.map(function (t) { return '<p>' + esc(t) + '</p>'; }).join('');
+
+    slot.innerHTML =
+        '<div class="chapter-head"><div class="marks" aria-hidden="true">' + marks + '</div>' +
+        '<div class="lab">' + esc(ch.label) + '</div>' +
+        '<h2>' + esc(ch.title) + '</h2></div>' +
+        '<article class="paper">' + body + '</article>' +
+        '<nav class="chapter-nav">' + p +
+        '<a class="back-to-toc" href="#toc">返回目录</a>' + n + '</nav>';
+
+    tocView.style.display = 'none';
+    readerView.classList.add('active');
+    document.body.classList.add('reading');
+    window.scrollTo(0, 0);
+}
+
+function route() {
+    const h = location.hash;
+    if (h.indexOf('#chapter-') === 0) {
+        const id = h.slice(9);
+        const i = CHAPTERS.findIndex(function (c) { return c.id === id; });
+        if (i >= 0) { showChapter(i); return; }
+    }
+    showToc();
+    if (h === '#volume-1') setVolume(true, false);
+}
+
+window.addEventListener('hashchange', route);
+route();
+</script>
+</body>
+</html>

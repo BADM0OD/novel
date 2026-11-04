@@ -186,6 +186,21 @@
     }
     .book-paper:hover .arrow { color: var(--qing); }
 
+    /* Emojiverse */
+    .book-emoji {
+        background: linear-gradient(150deg, #f4fcff 0%, #ddf1fa 60%, #cfe9f4 100%);
+        border: 1px solid rgba(47, 143, 168, .22);
+        box-shadow: 0 10px 26px rgba(40, 100, 120, .12);
+    }
+    .book-emoji .title { color: #12303d; }
+    .book-emoji .arrow { color: #6aa8bb; }
+    .book-emoji .spine { background: linear-gradient(180deg, #57c3d6, #2f7f95); }
+    .book-emoji:hover {
+        border-color: rgba(47, 143, 168, .50);
+        box-shadow: 0 18px 40px rgba(30, 90, 110, .20);
+    }
+    .book-emoji:hover .arrow { color: #2f7f95; }
+
     /* 悬停时飘过的花瓣 */
     .petals {
         position: absolute;
@@ -244,7 +259,7 @@
 
     <div class="head">
         <h1>书库</h1>
-        <div class="meta">共 2 本</div>
+        <div class="meta">共 3 本</div>
     </div>
 
     <div class="list">
@@ -259,6 +274,12 @@
             <span class="spine"></span>
             <span class="title">九洲：梨花微雨</span>
             <span class="petals" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="arrow">→</span>
+        </a>
+
+        <a class="book book-emoji" href="./emoji.html">
+            <span class="spine"></span>
+            <span class="title">Emojiverse：深渊篇</span>
             <span class="arrow">→</span>
         </a>
     </div>

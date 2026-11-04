@@ -321,25 +321,6 @@
             text-shadow: -1.5px 0 rgba(215, 55, 85, 0.55), 1.5px 0 rgba(95, 185, 210, 0.32);
         }
 
-        /* 最新一章上挂着一颗“未读” */
-        .toc-list .toc-item:last-child .chapter-title::after {
-            content: "";
-            display: inline-block;
-            width: 6px;
-            height: 6px;
-            margin-left: 10px;
-            border-radius: 50%;
-            background: var(--wechat);
-            vertical-align: middle;
-            box-shadow: 0 0 10px rgba(61, 220, 132, 0.85);
-            animation: unread 2.6s ease-in-out infinite;
-        }
-
-        @keyframes unread {
-            0%, 100% { opacity: 0.5; transform: scale(0.9); }
-            50% { opacity: 1; transform: scale(1.15); }
-        }
-
         .chapter-summary {
             margin-top: 8px;
             font-family: var(--sans);
