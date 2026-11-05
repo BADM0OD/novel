@@ -201,6 +201,61 @@
     }
     .book-emoji:hover .arrow { color: #2f7f95; }
 
+    /* 悬停时从卡里浮起的 emoji */
+    .emojis {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity .35s ease;
+    }
+    .book-emoji:hover .emojis { opacity: 1; }
+    .emojis i {
+        position: absolute;
+        bottom: -6px;
+        font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
+        font-style: normal;
+        font-size: 15px;
+        line-height: 1;
+        opacity: 0;
+        animation: emojiRise 3.6s ease-in-out infinite;
+        animation-play-state: paused;
+        filter: saturate(.9);
+    }
+    .book-emoji:hover .emojis i { animation-play-state: running; }
+    .emojis i:nth-child(1) { left: 56%; animation-delay: 0s; font-size: 16px; }
+    .emojis i:nth-child(2) { left: 66%; animation-delay: .9s; font-size: 13px; }
+    .emojis i:nth-child(3) { left: 76%; animation-delay: 1.8s; font-size: 19px; }
+    .emojis i:nth-child(4) { left: 86%; animation-delay: 2.7s; font-size: 14px; }
+
+    @keyframes emojiRise {
+        0% { transform: translateY(6px) scale(.85); opacity: 0; }
+        16% { opacity: .85; }
+        78% { opacity: .7; }
+        100% { transform: translateY(-54px) scale(1.06); opacity: 0; }
+    }
+
+    /* 悬停时扫过一道水光 */
+    .book-emoji::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: -45%;
+        width: 42%;
+        background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .6), transparent);
+        transform: skewX(-14deg);
+        opacity: 0;
+        pointer-events: none;
+    }
+    .book-emoji:hover::after { animation: sheen 1.5s ease .05s; }
+    @keyframes sheen {
+        0% { left: -45%; opacity: 0; }
+        18% { opacity: 1; }
+        100% { left: 115%; opacity: 0; }
+    }
+
     /* 悬停时飘过的花瓣 */
     .petals {
         position: absolute;
@@ -280,6 +335,7 @@
         <a class="book book-emoji" href="./emoji.html">
             <span class="spine"></span>
             <span class="title">Emojiverse：深渊篇</span>
+            <span class="emojis" aria-hidden="true"><i>🌊</i><i>🫧</i><i>🐦</i><i>💤</i></span>
             <span class="arrow">→</span>
         </a>
     </div>
